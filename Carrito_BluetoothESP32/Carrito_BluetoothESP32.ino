@@ -10,7 +10,7 @@ int canal2MotorD = 1;
 
 // ---- ciclo de trabajo o velocidad en bits ----//
 
-int velocidadDerecha = 200; // Esta en bits, va de 0 a 255
+int velocidad = 200; // Esta en bits, va de 0 a 255
 
 
 // --- Parametros para los motores ---- //
@@ -21,18 +21,21 @@ int resolucion = 8; // Se refiere a 8 bits
 void setup() {
   // Para realacionar los pines de entrada con los canales
   // Configuracion motor 1
-  ledcSetup(canal1MotorD, frecuencia, resolucion) // Esta es una funcion propia del ESP32
-  ledAttachPin(in1, cana1MotorD) // Unimos el motor con el canal
+  ledcSetup(canal1MotorD, frecuencia, resolucion); // Esta es una funcion propia del ESP32
+  ledAttachPin(in1, cana1MotorD); // Unimos el motor con el canal
 
   // Configuracion motor 2
-  ledcSetup(canal2MotorD, frecuencia, resolucion)
-  ledAttachPin(in2, canal2MotorD) // 
+  ledcSetup(canal2MotorD, frecuencia, resolucion);
+  ledAttachPin(in2, canal2MotorD); // 
 }
 
 void loop() {
-  giroDerecha(canal1MotorD, canal2MotorD, velocidadDerecha)
-  delay(1000)
-  giroIzquierda()
+  giroDerecha(canal1MotorD, canal2MotorD, velocidad);
+  delay(1000);
+  giroIzquierda(canal1MotorD, canal2MotorD, velocidad);
+  delay(1000);
+  pararMotor(canal1MotorD, canal2MotorD, velocidad);
+  delay(1000);
 
 }
 
