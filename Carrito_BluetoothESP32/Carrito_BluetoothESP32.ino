@@ -90,22 +90,16 @@ void setup() {
 }
 
 void loop() {
-  // Llamamos a la función eventoSerial
-  if (SerialBT.available()) serialEvent();
-
-  // Verificamos si la longitud del comando es mayor a 0
-  if (comando.length() > 0) {
-    SerialBT.println(comando); // Imprimir en el monitor serial el comando recibido
-
-    // Instrucción de movimiento según el comando recibido
-    if (comando == "F") adelante();
-    if (comando == "B") atras();
-    if (comando == "R") derecha();
-    if (comando == "L") izquierda();
-    if (comando == "S") detenerse();
-
-    comando = ""; // Limpiar el comando después de ejecutarlo
-  }
+  adelante();
+  delay(1500);
+  atras();
+  delay(1500);  
+  izquierda();
+  delay(1500);  
+  derecha();
+  delay(1500);  
+  detenerse();
+  delay(1500);
 }
 
 // ---- Creamos las funciones ---- //
@@ -113,50 +107,55 @@ void loop() {
 void adelante(){
 
   giroHorario(canal1MotorD, canal2MotorD, velocidad_derecho); 
-  giroHorario(canal1MotorI, canal2MotorI, velocidad_izquierdo); 
-
+  giroHorario(canal1MotorI, canal2MotorI, velocidad_izquierdo);
+  SerialBT.print("El Carrito está yendo hacia adelante\n"); 
+  Serial.print("El Carrito está yendo hacia adelante\n");
 }
 
 void atras(){
 
   giroAntihorario(canal1MotorD, canal2MotorD, velocidad_derecho); 
-  giroAntihorario(canal1MotorI, canal2MotorI, velocidad_izquierdo);  
+  giroAntihorario(canal1MotorI, canal2MotorI, velocidad_izquierdo); 
+  SerialBT.print("El Carrito está yendo hacia atras\n"); 
+  Serial.print("El Carrito está yendo hacia atras\n");
 }
 
 void izquierda(){
 
   giroHorario(canal1MotorD, canal2MotorD, velocidad_derecho); 
-  giroAntihorario(canal1MotorI, canal2MotorI, velocidad_izquierdo);  
-  
+  giroAntihorario(canal1MotorI, canal2MotorI, velocidad_izquierdo); 
+  SerialBT.print("El Carrito está yendo hacia la izquierda\n"); 
+  Serial.print("El Carrito está yendo hacia la izquierda\n");
 }
 
 void derecha(){
 
   giroAntihorario(canal1MotorD, canal2MotorD, velocidad_derecho); 
   giroHorario(canal1MotorI, canal2MotorI, velocidad_izquierdo); 
+  SerialBT.print("El Carrito está yendo hacia la derecha\n"); 
+  Serial.print("El Carrito está yendo hacia la derecha\n");
 }
 
 void detenerse(){
 
   pararMotor(canal1MotorD, canal2MotorD);
   pararMotor(canal1MotorI, canal2MotorI); 
+  SerialBT.print("El Carrito está detenido\n"); 
+  Serial.print("El Carrito está detenido\n");
 }
 void giroHorario(int canal1, int canal2, int cv) {
   ledcWrite(canal1, cv); // Activar el motor derecho
   ledcWrite(canal2, 0);  // Apagar el motor izquierdo
-  Serial.println("Esta Girando hacia la derecha");
 }
 
 void giroAntihorario(int canal1, int canal2, int cv) {
   ledcWrite(canal1, 0);  // Apagar el motor derecho
   ledcWrite(canal2, cv); // Activar el motor izquierdo
-  Serial.println("Esta Girando hacia la izquierda");
 }
 
 void pararMotor(int canal1, int canal2) {
   ledcWrite(canal1, 0);  // Apagar el motor derecho
   ledcWrite(canal2, 0);  // Apagar el motor izquierdo
-  Serial.println("Los motores están detenidos");
 }
 
 
@@ -167,5 +166,3 @@ void serialEvent() {
       comando += inChar; // Con esta funcion concatenamos todos los datos que lleguen de comando
   }
  }
-
-
