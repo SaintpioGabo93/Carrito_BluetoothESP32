@@ -62,6 +62,7 @@ void setup() {
 
   // Seteamos el objeto instanciado anteriormente con la libreria Serial Bluetooth
   SerialBT.begin("Robot_Diferencial"); // Cuando abramos el Bluetooth, este va a ser el nombre que nos va a salir como nombre del carrito
+  Serial.println("Bluetooth iniciado. Ahora puedes emparejarlo.");  
 
   // ------ Motor Derecho -------- //
   // Configuración 1 motor derecho
@@ -89,32 +90,21 @@ void setup() {
 }
 
 void loop() {
-  // Llamamos a la funcion eventoSerial
-  if(SerialBT.available()) eventoSerial(); // Con esto llamamos a nuestra funcion eventoSerial y la condicionamos a que el objeto BT este disponible.
-  
-  if(comando.length > 0){
-    
-    SerialBT.println(comando); // Con este comando imprimimos en pantalla el caracter que se envio desde el puerto serial 
-    
-    // Instruccion de que si le llega el caracter F vaya hacia adelante. 
-    if(comando == "F"){
-      adelante();
-    }
-    
-    // Instruccion de que si le llega el caracter B vaya hacia atras. 
-    if(comando == "B"){
-      atras();
-    }
+  // Llamamos a la función eventoSerial
+  if (SerialBT.available()) serialEvent();
 
-    // Instruccion de que si le llega el caracter R vaya hacia la derecha. 
-    if(comando == "R"){
-      derecha();
-    }
+  // Verificamos si la longitud del comando es mayor a 0
+  if (comando.length() > 0) {
+    SerialBT.println(comando); // Imprimir en el monitor serial el comando recibido
 
-    // Instruccion de que si le llega el caracter L vaya hacia la izquierda. 
-    if(comando == "L"){
-      izquierda();
-    }
+    // Instrucción de movimiento según el comando recibido
+    if (comando == "F") adelante();
+    if (comando == "B") atras();
+    if (comando == "R") derecha();
+    if (comando == "L") izquierda();
+    if (comando == "S") detenerse();
+
+    comando = ""; // Limpiar el comando después de ejecutarlo
   }
 }
 
@@ -171,7 +161,7 @@ void pararMotor(int canal1, int canal2) {
 
 
 // Creamos una funcion para la recepcion de los datos
-void eventoSerial() {
+void serialEvent() {
   while (SerialBT.available()){ // Con esta fucion verificamos que haya datos en el protocolo BT UART
       char inChar = (char)SerialBT.read(); // Con esta linea creamos una variable que va a recibir directo de la lectura del protocolo BT UART
       comando += inChar; // Con esta funcion concatenamos todos los datos que lleguen de comando
